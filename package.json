@@ -1,0 +1,25 @@
+{
+  "name": "notify-no-reviewer-action",
+  "version": "1.0.0",
+  "description": "Notify a user or team when a pull request has no reviewer.",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build index.js --license licenses.txt",
+    "prepare": "npm run build",
+    "test": "jest",
+    "lint": "eslint index.js src/ __tests__/"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^2.0.3",
+    "@actions/github": "^8.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@vercel/ncc": "^0.45.0",
+    "eslint": "^9.39.5",
+    "globals": "^17.11.0",
+    "jest": "^30.4.2",
+    "prettier": "^3.9.6"
+  }
+}
