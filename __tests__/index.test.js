@@ -1,5 +1,12 @@
-jest.mock('@actions/core');
-jest.mock('@actions/github');
+jest.mock('@actions/core', () => ({
+  getInput: jest.fn(),
+  setOutput: jest.fn(),
+  setFailed: jest.fn(),
+}));
+jest.mock('@actions/github', () => ({
+  context: {},
+  getOctokit: jest.fn(),
+}));
 
 const core = require('@actions/core');
 const github = require('@actions/github');
