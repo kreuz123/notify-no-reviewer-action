@@ -5,13 +5,17 @@ async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
   );
   const requestedTeams = pullRequest.requested_teams || [];
   const hasTeamReviewers = requestedTeams.length > 0;
+  if (hasHumanReviewers || hasTeamReviewers) {
+    return true;
+  }
+
   const { data: reviews } = await client.rest.pulls.listReviews({
     owner,
     repo,
     pull_number: pullNumber,
   });
 
-  return hasHumanReviewers || hasTeamReviewers || reviews.length > 0;
+  return reviews.length > 0;
 }
 
 module.exports = { hasReviewers };

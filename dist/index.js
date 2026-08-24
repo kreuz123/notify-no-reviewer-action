@@ -32,12 +32,25 @@ async function run() {
   }
 
   const client = github.getOctokit(core.getInput('token'));
+  let prData = pullRequest;
+  if (configuredNumber && Number(configuredNumber) !== pullRequest.number) {
+    const { data: fetchedPr } = await client.rest.pulls.get({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      pull_number: pullNumber,
+    });
+    if (fetchedPr.draft) {
+      return;
+    }
+    prData = fetchedPr;
+  }
+
   const foundReviewers = await hasReviewers(
     client,
     github.context.repo.owner,
     github.context.repo.repo,
     pullNumber,
-    pullRequest,
+    prData,
   );
   core.setOutput('has-reviewers', String(foundReviewers));
   if (foundReviewers) {
@@ -31916,13 +31929,17 @@ async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
   );
   const requestedTeams = pullRequest.requested_teams || [];
   const hasTeamReviewers = requestedTeams.length > 0;
+  if (hasHumanReviewers || hasTeamReviewers) {
+    return true;
+  }
+
   const { data: reviews } = await client.rest.pulls.listReviews({
     owner,
     repo,
     pull_number: pullNumber,
   });
 
-  return hasHumanReviewers || hasTeamReviewers || reviews.length > 0;
+  return reviews.length > 0;
 }
 
 module.exports = { hasReviewers };

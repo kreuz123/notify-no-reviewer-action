@@ -26,12 +26,25 @@ async function run() {
   }
 
   const client = github.getOctokit(core.getInput('token'));
+  let prData = pullRequest;
+  if (configuredNumber && Number(configuredNumber) !== pullRequest.number) {
+    const { data: fetchedPr } = await client.rest.pulls.get({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      pull_number: pullNumber,
+    });
+    if (fetchedPr.draft) {
+      return;
+    }
+    prData = fetchedPr;
+  }
+
   const foundReviewers = await hasReviewers(
     client,
     github.context.repo.owner,
     github.context.repo.repo,
     pullNumber,
-    pullRequest,
+    prData,
   );
   core.setOutput('has-reviewers', String(foundReviewers));
   if (foundReviewers) {
