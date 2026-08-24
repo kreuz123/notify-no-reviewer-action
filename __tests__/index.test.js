@@ -51,6 +51,13 @@ test('requested human reviewer does not notify', async () => {
   expect(createComment).not.toHaveBeenCalled();
 });
 
+test('requested team reviewer does not notify', async () => {
+  github.context.payload.pull_request.requested_teams = [{ slug: 'backend-team' }];
+  await run();
+  expect(createComment).not.toHaveBeenCalled();
+  expect(core.setOutput).toHaveBeenCalledWith('has-reviewers', 'true');
+});
+
 test('existing review does not notify', async () => {
   listReviews.mockResolvedValue({ data: [{ id: 1 }] });
   await run();

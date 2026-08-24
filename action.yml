@@ -17,7 +17,7 @@ inputs:
     required: false
 outputs:
   has-reviewers:
-    description: Whether a requested human reviewer or existing review was found.
+    description: Whether a requested human reviewer, requested team reviewer, or existing review was found.
   notified:
     description: Whether a notification comment was posted.
 runs:
