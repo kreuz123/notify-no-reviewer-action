@@ -1,0 +1,28 @@
+name: Notify if No Reviewer Assigned
+description: Notify a GitHub user or team when a pull request has no reviewer.
+inputs:
+  token:
+    description: GitHub token used to read PR information and post comments.
+    required: false
+    default: ${{ github.token }}
+  notify-target:
+    description: GitHub user or team to notify when no reviewer is assigned.
+    required: true
+  comment-template:
+    description: Comment template. Supports {notifyTarget}.
+    required: false
+    default: '{notifyTarget}, Please request a reviewer for this PR.'
+  pr-number:
+    description: Pull request number. Defaults to the number from the event context.
+    required: false
+outputs:
+  has-reviewers:
+    description: Whether a requested human reviewer, requested team reviewer, or existing review was found.
+  notified:
+    description: Whether a notification comment was posted.
+runs:
+  using: node24
+  main: dist/index.js
+branding:
+  icon: message-circle
+  color: blue
