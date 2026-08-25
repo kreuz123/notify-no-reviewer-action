@@ -15,7 +15,7 @@ async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
     pull_number: pullNumber,
   });
 
-  return reviews.length > 0;
+  return reviews.some((review) => review.user?.type !== 'Bot');
 }
 
 module.exports = { hasReviewers };

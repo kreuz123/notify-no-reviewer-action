@@ -10,7 +10,8 @@ reviewer (user or team) and no existing reviews.
 3. Any team present in `requested_teams` also counts as a requested reviewer.
 4. The action fetches existing pull request reviews.
 5. A comment is created only when there is no requested human reviewer, no
-   requested team reviewer, and no existing review.
+   requested team reviewer, and no existing review from a human (bot reviews
+   are ignored).
 
 The action creates a new comment, matching the effective behavior of the
 original `create-or-update-comment` usage (no comment ID was supplied).
@@ -64,7 +65,7 @@ Both `tjnurmin` and `@tjnurmin` produce `@tjnurmin`. Team targets such as
 
 | Name | Description |
 | --- | --- |
-| `has-reviewers` | `true` when a requested human reviewer, requested team reviewer, or existing review was found. |
+| `has-reviewers` | `true` when a requested human reviewer, requested team reviewer, or existing review from a human was found. |
 | `notified` | `true` when a notification comment was posted. |
 
 ## Required permissions
