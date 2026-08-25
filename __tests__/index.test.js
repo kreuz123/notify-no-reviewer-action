@@ -58,10 +58,21 @@ test('requested team reviewer does not notify', async () => {
   expect(core.setOutput).toHaveBeenCalledWith('has-reviewers', 'true');
 });
 
-test('existing review does not notify', async () => {
-  listReviews.mockResolvedValue({ data: [{ id: 1 }] });
+test('existing human review does not notify', async () => {
+  listReviews.mockResolvedValue({
+    data: [{ id: 1, user: { login: 'octocat', type: 'User' } }],
+  });
   await run();
   expect(createComment).not.toHaveBeenCalled();
+});
+
+test('bot-only review notifies as if no reviewer', async () => {
+  listReviews.mockResolvedValue({
+    data: [{ id: 2, user: { login: 'dependabot[bot]', type: 'Bot' } }],
+  });
+  await run();
+  expect(createComment).toHaveBeenCalled();
+  expect(core.setOutput).toHaveBeenCalledWith('notified', 'true');
 });
 
 test('no reviewer or review posts a notification', async () => {
