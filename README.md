@@ -6,10 +6,13 @@ reviewer (user or team) and no existing reviews.
 ## How it works
 
 1. Draft pull requests are treated as already handled.
-2. Reviewers in `requested_reviewers` count only when their `type` is `User`.
-3. Any team present in `requested_teams` also counts as a requested reviewer.
-4. The action fetches existing pull request reviews.
-5. A comment is created only when there is no requested human reviewer, no
+2. The action first checks the webhook payload for requested reviewers.
+3. Reviewers in `requested_reviewers` count only when their `type` is `User`.
+4. Any team present in `requested_teams` also counts as a requested reviewer.
+5. Since webhook payloads may be stale by the time the action runs, the action
+   refreshes the pull request data when no requested reviewer is found.
+6. The action fetches existing pull request reviews.
+7. A comment is created only when there is no requested human reviewer, no
    requested team reviewer, and no existing review from a human (bot reviews
    are ignored).
 
