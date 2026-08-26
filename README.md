@@ -3,6 +3,9 @@
 Notify a GitHub user or team when a non-draft pull request has no requested
 reviewer (user or team) and no existing reviews.
 
+The action only processes the pull request that triggered the `pull_request`
+event; specifying a different PR number is not supported.
+
 ## How it works
 
 1. Draft pull requests are treated as already handled.
@@ -59,7 +62,6 @@ template omits it, the mention is prepended automatically.
 | `token` | No | `${{ github.token }}` | Token used to read reviews and create comments. |
 | `notify-target` | Yes | — | GitHub username or `organization/team`, without `@`. |
 | `comment-template` | No | `{notifyTarget}, Please request a reviewer for this PR.` | Comment text; supports `{notifyTarget}`. |
-| `pr-number` | No | Event PR number | Pull request number to inspect. |
 
 Both `tjnurmin` and `@tjnurmin` produce `@tjnurmin`. Team targets such as
 `my-org/backend-team` produce `@my-org/backend-team`.
