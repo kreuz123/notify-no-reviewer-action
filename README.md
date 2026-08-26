@@ -16,9 +16,6 @@ reviewer (user or team) and no existing reviews.
    requested team reviewer, and no existing review from a human (bot reviews
    are ignored).
 
-The action creates a new comment, matching the effective behavior of the
-original `create-or-update-comment` usage (no comment ID was supplied).
-
 ## Basic usage
 
 ```yaml
