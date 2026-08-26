@@ -12,9 +12,6 @@ inputs:
     description: Comment template. Supports {notifyTarget}.
     required: false
     default: '{notifyTarget}, Please request a reviewer for this PR.'
-  pr-number:
-    description: Pull request number. Defaults to the number from the event context.
-    required: false
 outputs:
   has-reviewers:
     description: Whether a requested human reviewer, requested team reviewer, or existing review was found.

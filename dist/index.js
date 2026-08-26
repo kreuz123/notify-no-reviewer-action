@@ -6,7 +6,7 @@
 
 const core = __nccwpck_require__(7484);
 const github = __nccwpck_require__(3228);
-const { hasReviewers } = __nccwpck_require__(6230);
+const { hasReviewers, hasRequestedReviewers } = __nccwpck_require__(6230);
 const {
   normalizeNotifyTarget,
   buildCommentBody,
@@ -21,19 +21,12 @@ async function run() {
 
   core.setOutput('has-reviewers', 'true');
   core.setOutput('notified', 'false');
-  if (pullRequest.draft) {
-    return;
-  }
 
-  const configuredNumber = core.getInput('pr-number');
-  const pullNumber = Number(configuredNumber || pullRequest.number);
-  if (!Number.isSafeInteger(pullNumber) || pullNumber <= 0) {
-    throw new Error('Input "pr-number" must be a positive integer.');
-  }
-
+  const pullNumber = pullRequest.number;
   const client = github.getOctokit(core.getInput('token'));
   let prData = pullRequest;
-  if (configuredNumber && Number(configuredNumber) !== pullRequest.number) {
+
+  if (!hasRequestedReviewers(pullRequest)) {
     const { data: fetchedPr } = await client.rest.pulls.get({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
@@ -43,6 +36,8 @@ async function run() {
       return;
     }
     prData = fetchedPr;
+  } else if (pullRequest.draft) {
+    return;
   }
 
   const foundReviewers = await hasReviewers(
@@ -31922,14 +31917,18 @@ module.exports = { normalizeNotifyTarget, buildCommentBody };
 /***/ 6230:
 /***/ ((module) => {
 
-async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
+function hasRequestedReviewers(pullRequest) {
   const requestedReviewers = pullRequest.requested_reviewers || [];
   const hasHumanReviewers = requestedReviewers.some(
     (reviewer) => reviewer.type === 'User',
   );
   const requestedTeams = pullRequest.requested_teams || [];
   const hasTeamReviewers = requestedTeams.length > 0;
-  if (hasHumanReviewers || hasTeamReviewers) {
+  return hasHumanReviewers || hasTeamReviewers;
+}
+
+async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
+  if (hasRequestedReviewers(pullRequest)) {
     return true;
   }
 
@@ -31939,10 +31938,12 @@ async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
     pull_number: pullNumber,
   });
 
-  return reviews.some((review) => review.user?.type !== 'Bot');
+  return reviews.some(
+    (review) => review.user?.type === 'User',
+  );
 }
 
-module.exports = { hasReviewers };
+module.exports = { hasReviewers, hasRequestedReviewers };
 
 
 /***/ }),

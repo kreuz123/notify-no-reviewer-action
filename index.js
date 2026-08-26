@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const { hasReviewers } = require('./src/reviewer');
+const { hasReviewers, hasRequestedReviewers } = require('./src/reviewer');
 const {
   normalizeNotifyTarget,
   buildCommentBody,
@@ -15,19 +15,12 @@ async function run() {
 
   core.setOutput('has-reviewers', 'true');
   core.setOutput('notified', 'false');
-  if (pullRequest.draft) {
-    return;
-  }
 
-  const configuredNumber = core.getInput('pr-number');
-  const pullNumber = Number(configuredNumber || pullRequest.number);
-  if (!Number.isSafeInteger(pullNumber) || pullNumber <= 0) {
-    throw new Error('Input "pr-number" must be a positive integer.');
-  }
-
+  const pullNumber = pullRequest.number;
   const client = github.getOctokit(core.getInput('token'));
   let prData = pullRequest;
-  if (configuredNumber && Number(configuredNumber) !== pullRequest.number) {
+
+  if (!hasRequestedReviewers(pullRequest)) {
     const { data: fetchedPr } = await client.rest.pulls.get({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
@@ -37,6 +30,8 @@ async function run() {
       return;
     }
     prData = fetchedPr;
+  } else if (pullRequest.draft) {
+    return;
   }
 
   const foundReviewers = await hasReviewers(

@@ -59,7 +59,6 @@ template omits it, the mention is prepended automatically.
 | `token` | No | `${{ github.token }}` | Token used to read reviews and create comments. |
 | `notify-target` | Yes | — | GitHub username or `organization/team`, without `@`. |
 | `comment-template` | No | `{notifyTarget}, Please request a reviewer for this PR.` | Comment text; supports `{notifyTarget}`. |
-| `pr-number` | No | Event PR number | Pull request number to inspect. |
 
 Both `tjnurmin` and `@tjnurmin` produce `@tjnurmin`. Team targets such as
 `my-org/backend-team` produce `@my-org/backend-team`.

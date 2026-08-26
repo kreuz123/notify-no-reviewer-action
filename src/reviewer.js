@@ -1,11 +1,15 @@
-async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
+function hasRequestedReviewers(pullRequest) {
   const requestedReviewers = pullRequest.requested_reviewers || [];
   const hasHumanReviewers = requestedReviewers.some(
     (reviewer) => reviewer.type === 'User',
   );
   const requestedTeams = pullRequest.requested_teams || [];
   const hasTeamReviewers = requestedTeams.length > 0;
-  if (hasHumanReviewers || hasTeamReviewers) {
+  return hasHumanReviewers || hasTeamReviewers;
+}
+
+async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
+  if (hasRequestedReviewers(pullRequest)) {
     return true;
   }
 
@@ -15,7 +19,9 @@ async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
     pull_number: pullNumber,
   });
 
-  return reviews.some((review) => review.user?.type !== 'Bot');
+  return reviews.some(
+    (review) => review.user?.type === 'User',
+  );
 }
 
-module.exports = { hasReviewers };
+module.exports = { hasReviewers, hasRequestedReviewers };
