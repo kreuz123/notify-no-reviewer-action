@@ -14,7 +14,7 @@ const { run } = require('../index');
 
 const inputs = {
   token: 'token',
-  'notify-target': 'tjnurmin',
+  'notify-target': 'kreuz123',
   'comment-template': '{notifyTarget}, Please request a reviewer for this PR.',
   'pr-number': '',
 };
@@ -25,7 +25,7 @@ const createComment = jest.fn();
 beforeEach(() => {
   jest.clearAllMocks();
   inputs.token = 'token';
-  inputs['notify-target'] = 'tjnurmin';
+  inputs['notify-target'] = 'kreuz123';
   inputs['comment-template'] =
     '{notifyTarget}, Please request a reviewer for this PR.';
   inputs['pr-number'] = '';
@@ -122,7 +122,7 @@ test('no reviewer or review posts a notification', async () => {
     owner: 'owner',
     repo: 'repo',
     issue_number: 42,
-    body: '@tjnurmin, Please request a reviewer for this PR.',
+    body: '@kreuz123, Please request a reviewer for this PR.',
   });
   expect(core.setOutput).toHaveBeenCalledWith('notified', 'true');
 });
