@@ -31938,7 +31938,9 @@ async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
     pull_number: pullNumber,
   });
 
-  return reviews.some((review) => review.user?.type !== 'Bot');
+  return reviews.some(
+    (review) => review.user?.type === 'User',
+  );
 }
 
 module.exports = { hasReviewers, hasRequestedReviewers };
