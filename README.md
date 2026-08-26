@@ -3,9 +3,6 @@
 Notify a GitHub user or team when a non-draft pull request has no requested
 reviewer (user or team) and no existing reviews.
 
-The action only processes the pull request that triggered the `pull_request`
-event; specifying a different PR number is not supported.
-
 ## How it works
 
 1. Draft pull requests are treated as already handled.
