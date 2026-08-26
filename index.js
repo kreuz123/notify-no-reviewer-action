@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const { hasReviewers } = require('./src/reviewer');
+const { hasReviewers, hasRequestedReviewers } = require('./src/reviewer');
 const {
   normalizeNotifyTarget,
   buildCommentBody,
@@ -27,7 +27,9 @@ async function run() {
 
   const client = github.getOctokit(core.getInput('token'));
   let prData = pullRequest;
-  if (configuredNumber && Number(configuredNumber) !== pullRequest.number) {
+  const isConfiguredDifferentPr =
+    configuredNumber && Number(configuredNumber) !== pullRequest.number;
+  if (isConfiguredDifferentPr || !hasRequestedReviewers(pullRequest)) {
     const { data: fetchedPr } = await client.rest.pulls.get({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,

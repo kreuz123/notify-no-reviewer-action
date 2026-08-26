@@ -6,7 +6,7 @@
 
 const core = __nccwpck_require__(7484);
 const github = __nccwpck_require__(3228);
-const { hasReviewers } = __nccwpck_require__(6230);
+const { hasReviewers, hasRequestedReviewers } = __nccwpck_require__(6230);
 const {
   normalizeNotifyTarget,
   buildCommentBody,
@@ -33,7 +33,9 @@ async function run() {
 
   const client = github.getOctokit(core.getInput('token'));
   let prData = pullRequest;
-  if (configuredNumber && Number(configuredNumber) !== pullRequest.number) {
+  const isConfiguredDifferentPr =
+    configuredNumber && Number(configuredNumber) !== pullRequest.number;
+  if (isConfiguredDifferentPr || !hasRequestedReviewers(pullRequest)) {
     const { data: fetchedPr } = await client.rest.pulls.get({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
@@ -31922,14 +31924,20 @@ module.exports = { normalizeNotifyTarget, buildCommentBody };
 /***/ 6230:
 /***/ ((module) => {
 
-async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
+function hasRequestedReviewers(pullRequest) {
   const requestedReviewers = pullRequest.requested_reviewers || [];
   const hasHumanReviewers = requestedReviewers.some(
     (reviewer) => reviewer.type === 'User',
   );
   const requestedTeams = pullRequest.requested_teams || [];
   const hasTeamReviewers = requestedTeams.length > 0;
-  if (hasHumanReviewers || hasTeamReviewers) {
+
+  return hasHumanReviewers || hasTeamReviewers;
+}
+
+async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
+  const hasRequested = hasRequestedReviewers(pullRequest);
+  if (hasRequested) {
     return true;
   }
 
@@ -31942,7 +31950,7 @@ async function hasReviewers(client, owner, repo, pullNumber, pullRequest) {
   return reviews.some((review) => review.user?.type !== 'Bot');
 }
 
-module.exports = { hasReviewers };
+module.exports = { hasReviewers, hasRequestedReviewers };
 
 
 /***/ }),
