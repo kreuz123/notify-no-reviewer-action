@@ -39,6 +39,13 @@ jobs:
           notify-target: testaction
 ```
 
+## Example reminder comment
+
+The action posts a reminder comment when a non-draft pull request has no
+requested reviewer and no existing human review:
+
+![Example no-reviewer reminder comment](docs/images/reminder.png)
+
 ## Customizing the comment
 
 ```yaml
@@ -56,7 +63,7 @@ mention is automatically prepended to the comment.
 | Name | Required | Default | Description |
 | --- | --- | --- | --- |
 | `token` | No | `${{ github.token }}` | Token used to read reviews and create comments. |
-| `notify-target` | Yes | — | GitHub username or `organization/team`, with or without a leading `@`. In YAML, quote the value when it starts with `@`. For example, both `testaction` and `@testaction` produce `@testaction`. Use the regular half-width `@`, not the full-width `＠`. |
+| `notify-target` | Yes | — | GitHub username or `organization/team`, with or without a leading `@`. In YAML, quote the value when it starts with `@`. For example, both `testaction` and `@testaction` are valid values. |
 | `comment-template` | No | `{notifyTarget}, Please request a reviewer for this PR.` | Comment text. Supports `{notifyTarget}`. |
 
 ## Outputs
