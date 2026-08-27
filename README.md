@@ -1,4 +1,4 @@
-# notify-no-reviewer-action
+# Notify No Reviewer Action
 
 Notify a GitHub user or team when a non-draft pull request has no requested
 reviewer (user or team) and no existing reviews. This helps ensure that pull
@@ -34,16 +34,16 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - uses: OWNER/REPO@v1
+      - uses: kreuz123/notify-no-reviewer-action@v1
         with:
-          notify-target: my-org/backend-team
+          notify-target: testaction
 ```
 
 ## Customizing the comment
 
 ```yaml
 with:
-  notify-target: my-org/backend-team
+  notify-target: testaction
   comment-template: |
     {notifyTarget}, this PR is ready for review but currently has no reviewer. Please assign one.
 ```
@@ -56,8 +56,8 @@ mention is automatically prepended to the comment.
 | Name | Required | Default | Description |
 | --- | --- | --- | --- |
 | `token` | No | `${{ github.token }}` | Token used to read reviews and create comments. |
-| `notify-target` | Yes | — | GitHub username or `organization/team`, with or without a leading `@`. In YAML, quote the value when it starts with `@`. Both `testaction` and `@testaction` produce `@testaction`. Team targets such as `my-org/backend-team` produce `@my-org/backend-team`. Use the regular half-width `@`, not the full-width `＠`. |
-| `comment-template` | No | `{notifyTarget}, Please request a reviewer for this PR.` | Comment text. Supports `{notifyTarget}`; if omitted, the mention is automatically prepended. |
+| `notify-target` | Yes | — | GitHub username or `organization/team`, with or without a leading `@`. In YAML, quote the value when it starts with `@`. For example, both `testaction` and `@testaction` produce `@testaction`. Use the regular half-width `@`, not the full-width `＠`. |
+| `comment-template` | No | `{notifyTarget}, Please request a reviewer for this PR.` | Comment text. Supports `{notifyTarget}`. |
 
 ## Outputs
 
