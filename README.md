@@ -11,10 +11,11 @@ reviewer (user or team) and no existing reviews.
 4. Any team present in `requested_teams` also counts as a requested reviewer.
 5. Since webhook payloads may be stale by the time the action runs, the action
    refreshes the pull request data when no requested reviewer is found.
-6. The action fetches existing pull request reviews.
+6. The action checks whether a human has already submitted a review. Reviews
+   with a `Comment` state are included, while regular pull request conversation
+   comments and bot reviews are ignored.
 7. A comment is created only when there is no requested human reviewer, no
-   requested team reviewer, and no existing review from a human (bot reviews
-   are ignored).
+   requested team reviewer, and no existing human review.
 
 ## Basic usage
 
