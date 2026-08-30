@@ -14,7 +14,7 @@ const { run } = require('../index');
 
 const inputs = {
   token: 'token',
-  'notify-target': 'tjnurmin',
+  'notify-target': 'testaction',
   'comment-template': '{notifyTarget}, Please request a reviewer for this PR.',
 };
 const listReviews = jest.fn();
@@ -107,7 +107,7 @@ test('no reviewer or review posts a notification using event payload PR number',
     owner: 'owner',
     repo: 'repo',
     issue_number: 42,
-    body: '@tjnurmin, Please request a reviewer for this PR.',
+    body: '@testaction, Please request a reviewer for this PR.',
   });
   expect(core.setOutput).toHaveBeenCalledWith('notified', 'true');
 });
