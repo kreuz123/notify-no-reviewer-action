@@ -5,9 +5,9 @@ const {
 
 describe('comment building', () => {
   test.each([
-    ['tjnurmin', '@tjnurmin'],
+    ['testaction', '@testaction'],
     ['my-org/backend-team', '@my-org/backend-team'],
-    ['@tjnurmin', '@tjnurmin'],
+    ['@testaction', '@testaction'],
   ])('normalizes %s', (input, expected) => {
     expect(normalizeNotifyTarget(input)).toBe(expected);
   });
